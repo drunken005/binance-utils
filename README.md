@@ -22,24 +22,53 @@ import Binance from 'binance-utils';
 
 
 ### Classes
-##### [*Transaction*](#### Transaction)
+<dl>
+<dt><a href="#Transaction">Transaction</a></dt>
+<dd><p>Build an unsigned transaction object.</p>
+</dd>
+</dl>
 
-* [new Transaction(network)](#### Transaction*new-Transaction(network))
-* [create(args)]()
-* [serializeRawData()]()
+<dl>
+<dt><a href="#RawTransaction">RawTransaction</a></dt>
+<dd><p>Build an unsigned rawTransaction hex string.</p>
+</dd>
+</dl>
 
-##### [*RawTransaction*]()
-##### [*BnbApi*]()
-##### [*BnbRpc*]()
-##### [*Walle*]()
+<dl>
+<dt><a href="#BnbApi">BnbApi</a></dt>
+<dd><p>Create binance API server.</p>
+</dd>
+</dl>
 
+<dl>
+<dt><a href="#BnbRpc">BnbRpc</a></dt>
+<dd><p>The Binance Chain Node rpc client.</p>
+</dd>
+</dl>
 
-#### Transaction
+<dl>
+<dt><a href="#Wallet">Wallet</a></dt>
+<dd><p>Create or import BNB wallet.</p>
+</dd>
+</dl>
+
+<a name="Transaction"></a>
+##### Transaction
 Build an unsigned transaction object.
+* [Transaction](#Transaction)
+    * [new Transaction(network)](#new_Transaction_new)
+    * [.create()](#Transaction+create) ⇒ `Transaction`
+    * [.serializeRawData()](#Transaction+serializeRawData) ⇒ `String`
+    * [*static sign(privateKey, transaction, network)*](#Transaction+sign) ⇒ <code>String</code>
+    * [.transfer(fromAddress, toAddress, amount, asset, accountNumber, sequence, memo)](#Transaction+transfer) ⇒ [<code>Transaction</code>](#Transaction)
+    * [.multiSend(fromAddress, outputs, accountNumber, sequence, memo)](#Transaction+multiSend) ⇒ [<code>Transaction</code>](#Transaction)
+
+<a name="new_Transaction_new"></a>
 * **new Transaction(network)**;
     * **params**
     *network* : `Binance chain network, supported 'mainnet/testnet', default: 'mainnet'  <String>`
 
+<a name="Transaction+create"></a>
 * **create() =>** `Transaction`
 create an unsigned transaction, the parameter list corresponds to the parameters of each transaction, e.g: `transfer、multiSend、placeOrder、cancelOrder、list、issue、freeze、unfreeze、burn、mint`
     Example
@@ -51,7 +80,8 @@ create an unsigned transaction, the parameter list corresponds to the parameters
     const multiTx = transaction.create('multiSend', fromAddress, outputs, accountNumber, sequence, memo);
     //and more...
     ```
-
+    
+<a name="Transaction+serializeRawData"></a>
 * **serializeRawData()** => `String`
 Serialize the original transaction object
 Example
@@ -61,6 +91,8 @@ Example
     const multiTx = transaction.create('multiSend', fromAddress, outputs, accountNumber, sequence, memo);
     const hexString = multiTx.serializeRawData();
     ```
+
+<a name="Transaction+sign"></a>
 * **static sign(privateKey, transaction, network)**  => `String`
 Sign the transaction offline
     * **params**
@@ -76,6 +108,7 @@ Example
     const signedHexString = Transaction.sign('private key', tx, 'testnet');
     ```
 
+<a name="Transaction+transfer"></a>
 * **transfer(fromAddress, toAddress, amount, asset, accountNumber, sequence, memo)** => `Transaction`
 Transfer tokens from one address to another.
     * **params**
@@ -87,6 +120,7 @@ Transfer tokens from one address to another.
     *sequence* : `sequence <Number>`
     *memo* : `memo <String>[optional]`
 
+<a name="Transaction+multiSend"></a>
 * **multiSend(fromAddress, outputs, accountNumber, sequence, memo)** => `Transaction`
 Create a multi send tx
     * **params**
@@ -120,6 +154,7 @@ Example
     }]
     ```
 
+<a name="Transaction+cancelOrder"></a>
 * **cancelOrder(fromAddress, symbol, refid, accountNumber, sequence)** => `Transaction`
 Cancel an order.
     * **params**
@@ -129,6 +164,7 @@ Cancel an order.
     *accountNumber* : `account number <Number>`
     *sequence* : `sequence <Number>`
 
+<a name="Transaction+placeOrder"></a>
 * **placeOrder(address, symbol, side, price, quantity, timeinforce, accountNumber, sequence)** => `Transaction`
 Place an order.
     * **params**
@@ -141,6 +177,7 @@ Place an order.
     *accountNumber* : `account number <Number>`
     *sequence* : `sequence <Number>`
 
+<a name="Transaction+list"></a>
 * **list(address, proposalId, baseAsset, quoteAsset, initPrice, accountNumber, sequence)** => `Transaction`
 Add a new trading pair
     * **params**
@@ -152,6 +189,7 @@ Add a new trading pair
     *accountNumber* : `account number <Number>`
     *sequence* : `sequence <Number>`
 
+<a name="Transaction+issue"></a>
 * **issue(senderAddress, tokenName, symbol, totalSupply, mintable, accountNumber, sequence)** => `Transaction`
 Create a new asset Transaction on Binance Chain
     * **params**
@@ -163,6 +201,7 @@ Create a new asset Transaction on Binance Chain
     *accountNumber* : `account number <Number>`
     *sequence* : `sequence <Number>`
 
+<a name="Transaction+freeze"></a>
 * **freeze(fromAddress, symbol, amount, accountNumber, sequence)** => `Transaction`
 Freeze some amount of token
     * **params**
@@ -172,6 +211,7 @@ Freeze some amount of token
     *accountNumber* : `account number <Number>`
     *sequence* : `sequence <Number>`
 
+<a name="Transaction+unfreeze"></a>
 * **unfreeze(fromAddress, symbol, amount, accountNumber, sequence)** => `Transaction`
 Unfreeze some amount of token
   * **params**
@@ -181,6 +221,7 @@ Unfreeze some amount of token
     *accountNumber* : `account number <Number>`
     *sequence* : `sequence <Number>`
 
+<a name="Transaction+burn"></a>
 * **burn(fromAddress, symbol, amount, accountNumber, sequence)** => `Transaction`
 Burn some amount of token
     * **params**
@@ -190,6 +231,7 @@ Burn some amount of token
     *accountNumber* : `account number <Number>`
     *sequence* : `sequence <Number>`
 
+<a name="Transaction+mint"></a>
 * **mint(fromAddress, symbol, amount, accountNumber, sequence)** => `Transaction`
 Mint tokens for an existing token
     * **params**
@@ -354,7 +396,7 @@ The transaction will be broadcasted and returns with the response from CheckTx.
 
 
 ##### Wallet
-Create or import wallet
+Create or import BNB wallet
 * **new Wallet(privateKey, network)** => `Wallet`
     * **params**
     *privateKey* : `private key，if the private key is empty, a new private key will be produced. <String>`
