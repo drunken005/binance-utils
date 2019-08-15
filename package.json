@@ -1,6 +1,6 @@
 {
   "name": "binance-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Provide binance chain transaction build and signature",
   "main": "index.js",
   "scripts": {
