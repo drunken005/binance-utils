@@ -27,4 +27,4 @@ import Binance from 'binance-utils';
 * **crypto** - Core cryptographic functions.
 
 ## API
-[API documentation]()
+[API documentation](https://github.com/drunken005/binance-utils/blob/master/docs/api.md)
