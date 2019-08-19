@@ -43,8 +43,6 @@
  * [Transaction](#Transaction)
      * [new Transaction(network)](#new_Transaction_new)
      * [.create()](#Transaction+create) ⇒ [<code>Transaction</code>](#Transaction)
-     * [.serializeRawData()](#Transaction+serializeRawData) ⇒ <code>String</code>
-     * [*static sign(privateKey, transaction, network)*](#Transaction+sign) ⇒ <code>String</code>
      * [.transfer(fromAddress, toAddress, amount, asset, accountNumber, sequence, memo)](#Transaction+transfer) ⇒ [<code>Transaction</code>](#Transaction)
      * [.multiSend(fromAddress, outputs, accountNumber, sequence, memo)](#Transaction+multiSend) ⇒ [<code>Transaction</code>](#Transaction)
      * [.cancelOrder(fromAddress, symbol, refid, accountNumber, sequence)](#Transaction+cancelOrder) ⇒ [<code>Transaction</code>](#Transaction)
@@ -70,31 +68,6 @@
      const tx = transaction.create('transfer', fromAddress, toAddress, amount, assert, accountNumber, sequence, memo);
      const multiTx = transaction.create('multiSend', fromAddress, outputs, accountNumber, sequence, memo);
      //and more...
-     ```
-
-     <a name="Transaction+serializeRawData"></a>
-     #### serializeRawData() => `String`
-     Serialize the original transaction object
-     eg:
-     ```js
-     const {Transaction} = require('binance-utils')
-     const transaction = new Transaction('testnet');
-     const multiTx = transaction.create('multiSend', fromAddress, outputs, accountNumber, sequence, memo);
-     const hexString = multiTx.serializeRawData();
-     ```
-
-     <a name="Transaction+sign"></a>
-     #### static sign(privateKey, transaction, network)  => `String`
-     * ***privateKey*** : Sign account private key  `<String>`
-     * ***transaction*** : Build Transaction instance  `<Object>`
-     * ***network*** : Binance chain network, default 'mainnet'  `<String>`
-     eg:
-     ```js
-     const {Transaction} = require('binance-utils')
-     const transaction = new Transaction('testnet');
-     const tx = transaction.create('placeOrder', address, symbol, side, price, quantity, timeinforce, accountNumber, sequence);
-     // `signedHexString` can directly call the broadcast transaction interface and send it to the blockchain
-     const signedHexString = Transaction.sign('private key', tx, 'testnet');
      ```
 
      <a name="Transaction+transfer"></a>
@@ -225,8 +198,7 @@ Build an unsigned rawTransaction hex string
 * [RawTransaction](#RawTransaction)
     * [new Transaction(network)](#new_RawTransaction_new)
     * [.create()](#RawTransaction+create) ⇒ `String`
-    * [*static parseTransaction(data)*](#RawTransaction+parseTransaction) ⇒ <code>String</code>
-    * [*static sign(privateKey, rawTransaction, network)*](#RawTransaction+sign) ⇒ <code>String</code>
+    * [*static parseTransaction(rawTransaction)*](#RawTransaction+parseTransaction) ⇒ [<code>Transaction</code>](#Transaction)
 
     <a name="new_RawTransaction_new"></a>
     #### new RawTransaction(network)
@@ -245,30 +217,15 @@ Build an unsigned rawTransaction hex string
     ```
 
     <a name="RawTransaction+parseTransaction"></a>
-    #### static parseTransaction(data) => `Object{msg, signMsgHex, signMsg}`
-     Decode raw transaction data
-    * ***data*** : data Transaction hex string `<String>`
+    #### static parseTransaction(rawTransaction) => [<code>Transaction</code>](#Transaction)
+     Converts the rawTransaction string to Transaction
+    * ***rawTransaction*** : unsigned transaction hex string `<String>`
     eg:
     ```js
     const {RawTransaction} = require('binance-utils')
     const rawTransaction = new RawTransaction('testnet');
     const txStr = rawTransaction.create('transfer', fromAddress, toAddress, amount, assert, accountNumber, sequence, memo);
     const transaction = RawTransaction.parseTransaction(txStr);
-    ```
-
-    <a name="RawTransaction+sign"></a>
-    #### static sign(privateKey, rawTransaction, network)  => `String`
-    Sign the raw transaction
-    * ***privateKey*** : Sign account private key `<String>`
-    * ***rawTransaction*** : rawTransaction `<String>`
-    * ***network*** : Binance chain network, default 'mainnet' `<String>`
-    eg:
-    ```js
-    const {Transaction} = require('binance-utils')
-    const transaction = new Transaction('testnet');
-    const tx = transaction.create('placeOrder', address, symbol, side, price, quantity, timeinforce, accountNumber, sequence);
-    // `signedHexString` can directly call the broadcast transaction interface and send it to the blockchain
-    const signedHexString = Transaction.sign('private key', tx, 'testnet');
     ```
 
 <a name="BnbApi"></a>
@@ -412,7 +369,7 @@ Create or import BNB wallet
     * [new Wallet(privateKey, network)](#new_Wallet_new)
     * [.exportKeystore(password)](#Wallet+exportKeystore) ⇒ `Object`
     * [.serializePubKey(password)](#Wallet+serializePubKey) ⇒ `Buffer`
-    * [.sign(data)](#Wallet+sign) ⇒ `String`
+    * [.sign(transaction)](#Wallet+sign) ⇒ `String`
     * [.export(password)](#Wallet+export) ⇒ `Object`
     * [*static createMnemonicWallet(mnemonic, network)*](#Wallet+createMnemonicWallet) ⇒ [<code>Wallet</code>](#Wallet)
     * [*static importKeystoreWallet(keystore, password, network)*](#Wallet+importKeystoreWallet) ⇒ [<code>Wallet</code>](#Wallet)
@@ -448,9 +405,9 @@ Create or import BNB wallet
     ```
 
     <a name="Wallet+sign"></a>
-    #### sign(data) => `String`
+    #### sign(transaction) => `String`
     Generates a signature (64 byte <r,s>) for a transaction based on current wallet privateKey
-    * ***data*** : Unsigned transaction sign bytes hexstring. `<String>`
+    * ***transaction*** : Unsigned transaction sign bytes hexstring or [<code>Transaction</code>](#Transaction). `<String|Transaction>`
     eg:
     ```js
     const rawTransaction = rawTransaction.create('transfer', fromAddress, toAddress, amount, assert, account_number, sequence, memo);
