@@ -411,8 +411,11 @@ Create or import BNB wallet
     eg:
     ```js
     const rawTransaction = rawTransaction.create('transfer', fromAddress, toAddress, amount, assert, account_number, sequence, memo);
+    
+    const signature = wallet.sign(rawTransaction);
+    //or
     const transaction = RawTransaction.parseTransaction(rawTransaction);
-    const signature = wallet.sign(transaction.signMsgHex);
+    const signature = wallet.sign(transaction);
     ```
 
     <a name="Wallet+export"></a>
